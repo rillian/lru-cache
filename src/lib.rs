@@ -336,6 +336,13 @@ impl<K: Eq + Hash, V, S: BuildHasher, M: CountableMeter<K, V>> LruCache<K, V, S,
         self.map.contains_key(key)
     }
 
+    pub fn get<Q: ?Sized>(&mut self, k: &Q) -> Option<&V>
+        where K: Borrow<Q>,
+              Q: Hash + Eq
+    {
+        self.map.get_refresh(k).map(|v| v as &V)
+    }
+
 
     /// Inserts a key-value pair into the cache. If the key already existed, the old value is
     /// returned.
@@ -786,6 +793,7 @@ mod tests {
         cache.insert("foo4", vec![9, 10]);
         assert_eq!(cache.size(), 4);
         assert!(!cache.contains_key("foo3"));
+        assert_eq!(cache.get("foo2"), Some(&vec![7, 8]));
     }
 
     #[test]
