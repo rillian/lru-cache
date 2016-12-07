@@ -329,7 +329,7 @@ impl<K: Eq + Hash, V, S: BuildHasher, M: CountableMeter<K, V>> LruCache<K, V, S,
     /// cache.insert(1, "a");
     /// assert_eq!(cache.contains_key(&1), true);
     /// ```
-    pub fn contains_key<Q: ?Sized>(&mut self, key: &Q) -> bool
+    pub fn contains_key<Q: ?Sized>(&self, key: &Q) -> bool
         where K: Borrow<Q>,
               Q: Hash + Eq
     {
